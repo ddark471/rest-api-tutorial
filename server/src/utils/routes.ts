@@ -11,11 +11,11 @@ import { createProductHandler, deleteProductHandler, getProductHandler, updatePr
 import { uploadImage } from "../service/multer.service";
 
 function routes(app: Express){
-    app.post("/api/users", deserealizeUser, uploadImage.single("image"),  validateResource(createUserSchema), createUserHandler)       //post api endpoint for creating users
+    app.post("/api/users",   uploadImage.single("image"),  validateResource(createUserSchema), createUserHandler)       //post api endpoint for creating users
 
     app.get("/api/users/details", deserealizeUser, getUserDetailsHandler);  
     
-    app.post("/api/sessions", deserealizeUser, validateResource(createSessionSchema), createSessionHandler)      //post api endpoint for creating user sessions
+    app.post("/api/sessions", validateResource(createSessionSchema), createSessionHandler)      //post api endpoint for creating user sessions
 
     app.get("/api/sessions", deserealizeUser, requireUser, getUserSessionsHandler);         //get api endpoint for getting all user sessions
 
@@ -25,7 +25,7 @@ function routes(app: Express){
 
     app.put("/api/products", deserealizeUser, requireUser, validateResource(updateProductSchema), updateProductHandler)
     
-    app.get("/api/products", deserealizeUser, validateResource(getProductSchema), getProductHandler)
+    app.get("/api/products", validateResource(getProductSchema), getProductHandler)
     
     app.delete("/api/products", deserealizeUser, requireUser, validateResource(deleteProductSchema), deleteProductHandler)
 
