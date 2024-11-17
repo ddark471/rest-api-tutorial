@@ -3,7 +3,7 @@ export default {
     dbUri: "mongodb://127.0.0.1:27017/rest-api-tutorial",
     saltWorkFactor: 10,
     accessTokenTtl: "15m",
-    refreshTokenTtl: "1y",
+    refreshTokenTtl: "1d",
     publicKey: `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlEGOroLglpJND+HfaTN3
 R9WUPHQnIxGs2eavAqbgs+vWVVo8W9QKvVMB44Ip/eTM1k890r56Bg4f1tKZfO8y

@@ -17,7 +17,7 @@ const fileFilter = (req: any, file: any, cb: any) => {
 
     if(mimetype && extname){
         return cb(null, true)
-    }   else{
+    }   else{   
         cb(new Error("Only images are allowed"))
     }
 }
