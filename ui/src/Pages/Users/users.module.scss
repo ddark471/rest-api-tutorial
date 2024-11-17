@@ -1,0 +1,94 @@
+@use "../../mixins.scss" as *;
+
+.users{
+    max-width: 80%;
+    width: 100%;
+    height: 100%;
+    @include flex_column();
+    gap: 40px;
+}
+
+.user__createNew{
+    max-width: 100%;
+    width: 100%;
+    height: 8%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.users__table{
+    max-width: 100%;
+    width: 100%;
+    overflow: visible;
+    border: 1px solid rgba(11, 108, 195, 0.25);
+    border-radius: 12px !important;
+}
+
+.users__main{
+    max-width: 100%;
+    width: 100%;
+    border-collapse: collapse;
+    overflow: scroll;
+}
+
+.main__header{
+    max-width: 100%;
+    width: 100%;
+}
+
+.header__item{
+    border-right: 1px solid rgba(11, 108, 195, 0.25);
+}
+
+.header__item, .header__icon{
+    width: max-content;
+    background-color: #F0F8FF;
+    padding: 0px 20px;
+    @include inter();
+    font-size: 13px;
+    font-weight: 700;
+    color: #0B6CC3;
+    height: 48px;
+    text-align: start !important;
+}
+
+.main__body{
+    max-width: 100%;
+    width: 100%;
+    height: 5%;
+    position: relative;
+}
+
+.body__item{
+    border-top: 1px solid rgba(11, 108, 195, 0.25);
+    border-right: 1px solid rgba(11, 108, 195, 0.25);
+    height: 72px;
+    padding: 0px 20px;
+}
+
+.body__item:nth-child(1){
+    width: 0 !important;
+}
+
+.body__item:nth-last-child(1){
+    border-right: none !important;
+    width: 0 !important;
+}
+
+.icon__item{
+    width: 16px;
+    height: 16px;
+    & svg{
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.item__options{
+    max-width: 208px;
+    width: 100%;
+    height: max-content;
+    position: absolute;
+    z-index: 10000000000;
+    right: 10px;
+}

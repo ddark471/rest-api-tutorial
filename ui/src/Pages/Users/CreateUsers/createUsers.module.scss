@@ -1,0 +1,22 @@
+@use "../../../mixins.scss" as *;
+
+.createUser{
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+}
+
+.createUser__main{
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+    @include column_centered();
+    gap: 20px;
+    & > label{
+        max-width: 25%;
+        height: 10%;
+    }
+    & > button{
+        height: 10%;
+    }
+}

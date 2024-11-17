@@ -1,0 +1,10 @@
+@use "../.././../../mixins.scss" as *;
+
+.new__user{
+    max-width: 20%;
+    width: 100%;
+    height: 100%;
+    border-radius: 100px;
+    background: linear-gradient(116deg, #5AE298 0.77%, #008D40 99.05%) !important;
+    border: none !important;
+}

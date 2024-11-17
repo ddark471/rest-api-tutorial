@@ -1,45 +1,45 @@
-import React, {useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import style from "./pages.module.scss"
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, redirect, Route, Routes, useNavigate } from 'react-router-dom'
 import Login from './Login'
 import Home from './Home'
 import NavBar from '../components/NavBar'
+import Sidebar from '../components/Sidebar'
+import { AuthContext } from '../context/AuthContext'
+import User from './Users'
+import CreateUser from './Users/CreateUsers'
 
 const Pages = () => {
-    const [token, setToken] = useState<string | null>(null);
-    useEffect(() => {
-        if(localStorage.getItem("accessToken")){
-            setToken(localStorage.getItem("accessToken"))
-        }
-    }, [localStorage.getItem("accessToken")])
+    const authContext = useContext(AuthContext);
 
-    if(!token) {
-       return(
-        <div className={style.login}>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/login" element={<Login/>}/>
-                </Routes>
-            </BrowserRouter>
-        </div>
-       )   
-    }
+   if (!authContext) {
+       return null; // Prevents rendering if authContext is not provided
+   }
+
+   const { token, setToken } = authContext;
 
   return (
-    <div className={style.wrapper}>
-        <NavBar/>
-        <div className={style.wrapper__main}>
-        {/* 
-            Sidebar 
-        */} 
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<Home/>}/>
-            </Routes>
-        </BrowserRouter>
+        !token ? (
+            <div className={style.login}>
+                <Routes>
+                    <Route path='/login' element={<Login/>}/>
+                    <Route path='*' element={<Navigate to={"/login"}/>}/>
+                </Routes>
+            </div>
+        ):(
+            <div className={style.wrapper}>
+            <NavBar/>
+            <div className={style.wrapper__main}>
+                <Sidebar/>
+                <Routes>
+                    <Route path="/home" element={<Home/>}/>
+                    <Route path='*' element={<Navigate to={"/home"}/>}/>
+                    <Route path='/home/users' element={<User/>}/>
+                    <Route path='/home/users/create' element={<CreateUser/>}/>
+                </Routes>
         </div>
-    </div>
-  )
+    </div>)
+    )
 }
 
 export default Pages

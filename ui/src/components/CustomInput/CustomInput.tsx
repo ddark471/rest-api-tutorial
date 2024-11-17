@@ -8,12 +8,13 @@ interface Iprops{
   placeholder: string;
   name: string;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  value: string;
+  value?: string;
   error: string | undefined;
   touched: boolean | undefined;
+  accept?: string;
 }
 
-const CustomInput:React.FC<Iprops> = ({inputType, inputName, placeholder, name, handleChange, value, error, touched}) => {
+const CustomInput:React.FC<Iprops> = ({inputType, inputName, placeholder, name, handleChange, value, error, touched,accept}) => {
   const [focus, setFocus] = useState<boolean>(false);
 
   const handleFocus = () => {
@@ -42,6 +43,7 @@ const CustomInput:React.FC<Iprops> = ({inputType, inputName, placeholder, name, 
         value={value}
         onClick={handleFocus}
         onBlur={handleFocus}
+        accept={accept ? accept:""}
       />
       {
         error && (

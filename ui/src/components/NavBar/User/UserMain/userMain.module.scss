@@ -1,0 +1,88 @@
+@use "../../../../mixins.scss" as *;
+
+.userMain{
+    max-width: 280px;
+    width: 100%;
+    height: max-content;
+    @include flex_column();
+    position: absolute;
+    right: 2%;
+    border-radius: 16px;
+    background: #FFFFFF;
+    box-shadow: 0px 8px 35px 0px rgba(0, 0, 0, 0.25);
+    padding: 20px 20px 12px 20px;
+    z-index: 100;
+}
+
+.userMain__icon{
+    width: 20px;
+    height: 20px;
+    & svg{
+        width: 100%;
+        height: 100%;
+    }
+    &:hover{
+        cursor: pointer;
+    }
+}
+
+.userMain__container{
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+    @include flex_column();
+    gap: 10px;
+    box-sizing: border-box;
+}
+
+.container__header{
+    max-width: 100%;
+    width: 100%;
+    height: 30%;
+    @include row_centered();
+}
+
+.header__image{
+    width: 80px;
+    height: 80px;
+}
+
+.image{
+    width: 100%;
+    height: 100%;
+    border-radius: 80px;
+}
+
+.container__main{
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+    @include flex_column();
+}
+
+.main__item{
+    max-width: 100%;
+    width: 100%;
+    height: max-content;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    &:hover{
+        cursor: pointer;
+    }
+}
+
+.item__icon{
+    width: 20px;
+    height: 20px;
+    & svg{
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.item__text{
+    @include inter();
+    font-size: 15px;
+    line-height: 140%;
+}

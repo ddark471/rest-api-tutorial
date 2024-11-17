@@ -6,7 +6,8 @@ import { login } from '../interfaces'
 export const useLogIn = () => {
     const {data, mutate, error} = useMutation({
         mutationKey: ["LogIn"],
-        mutationFn: ({email, password}: login) => LogIn({email, password})
+        mutationFn: ({email, password}: login) => LogIn({email, password}),
+        onSuccess: () => console.log()
     })
 
     return {data, mutate, error}

@@ -1,0 +1,24 @@
+@use "../../../../mixins.scss" as *;
+
+.optionsButton{
+    width: 24px;
+    height: 24px;
+    @include row_centered();
+    align-items: start !important;
+    gap: 2px;
+    background-color: #F0F8FF;
+    border-radius: 100%;
+    box-sizing: border-box; 
+    &:hover{
+        cursor: pointer;
+    }
+}
+
+.optionsButton__icon{
+    width: 4px;
+    height: 4px;
+    & svg{
+        width: 100%;
+        height: 100%;
+    }
+}

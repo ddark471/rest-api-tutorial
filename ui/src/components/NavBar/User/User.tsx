@@ -1,21 +1,59 @@
-import React from 'react'
+import React, {useState, useRef, useContext, useEffect} from 'react'
 import style from "./user.module.scss"
+import UserMain from './UserMain';
+import { AuthContext } from '../../../context/AuthContext';
+import { getUserImage } from '../../../services/getUserImage';
+import { profileEnd } from 'console';
 
 const User = () => {
+  const authContext = useContext(AuthContext);
+  const {user} = authContext || {};
+  const [click, setClick] = useState<boolean>(false);
+  const handleClick = () => setClick(!click)
+  const [profileImage, setProfileImage] = useState<string>();
+  let userImage;
+  useEffect(() => {
+    const provideUserImage = async () => {
+      if(user?.image){
+       try{
+        const imageLink = await getUserImage(user?.image);
+        setProfileImage(imageLink)
+       } catch(err){
+        console.error(err)
+       }
+      }
+    }
+    provideUserImage();
+  }, [user])
+
+
+
   return (
-    <div className={style.user}>
+    click ? (
+      <UserMain setClick={setClick} image={profileImage}/>
+    ):(
+      <div className={style.user}>
       <div className={style.user__text}>
-        <span className={style.text__main}>
-          Dodajon Xusnitdinov
+        <span className={style.text__main}  onClick={handleClick}>
+          {user?.name}
         </span>
-        <span className={style.text__sub}>
-          Developer
+        <span className={style.text__sub}  onClick={handleClick}>
+          {user?.email}
         </span>
       </div>
-      <div className={style.user__image}>
-        {/* user image */}
+      <div className={style.user__image}  onClick={handleClick}>
+        <div className={style.image}>
+          {
+            profileImage ? (
+              <img src={profileImage} className={style.image__}/>
+            ) : (
+              <span className={style.image__text}>{user?.name[0]}</span>
+            )
+          }
+        </div>
       </div>
     </div>
+    )
   )
 }
 
