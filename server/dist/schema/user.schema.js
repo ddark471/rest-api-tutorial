@@ -1,8 +1,7 @@
-import {object, string, TypeOf} from "zod"
-
+import { object, string } from "zod";
 export const createUserSchema = object({
     body: object({
-        name: string({  
+        name: string({
             required_error: "Name is required"
         }),
         password: string({
@@ -18,8 +17,4 @@ export const createUserSchema = object({
         message: "Passwords do not match",
         path: ["passwordConfirmation"]
     })
-})
-
-export type CreateUserInput = Omit<
-TypeOf<typeof createUserSchema>, "body.passwordConfirmation"
->
+});

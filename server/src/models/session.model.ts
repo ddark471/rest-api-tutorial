@@ -1,5 +1,5 @@
 import mongoose, { Date, mongo } from "mongoose";
-import { UserDocument } from "./user.model";
+import { UserDocument } from "./user.model.js";
 
 export interface SessionDocument extends mongoose.Document{
     user: UserDocument["_id"];

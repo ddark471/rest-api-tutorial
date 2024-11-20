@@ -40,6 +40,7 @@ u0bdIQKBgQDC+HLFN65RtHc4jaN6xZR7bkIbVAIFA9OxuCn2kBU+f5ja6JUKoU7b
 Bq1v8Ono2kp0ky7jDPACexKfi8xfgD030JjH7vgsPU0Ves4a94wcAOCSN6ZO73UC
 0iaPgpNZTVDSCxUzGGaBtZktV3xshiOW15+GdmbHYTEd1tfFkq+IOg==
 -----END RSA PRIVATE KEY-----`,
-};
+}
+
 export default config;
 module.exports = config;

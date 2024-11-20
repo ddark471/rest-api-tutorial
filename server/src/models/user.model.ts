@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
-import HookNextFunction from "mongoose"
 import bcrypt from "bcrypt"
-import config from "config"
+import c from "config"
 import { NextFunction } from "express";
+import { createRequire } from "module";
+import mongoose, { Schema, Document } from "mongoose";
 
 export interface UserInput {
     email: string;
@@ -11,29 +11,32 @@ export interface UserInput {
     image: string;
 }
 
-export interface UserDocument extends UserInput, mongoose.Document{
+// const require = createRequire(import.meta.url);
+// const mongoose = require("mongoose");
+// const Schema = mongoose.Schema;
+// const Document = mongoose.Document;
+
+export interface UserDocument extends UserInput, Document{
     createdAt: Date;
     updatedAt: Date;
     comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
-const userSchema = new mongoose.Schema(
+const userSchema: Schema = new Schema(
     {
         email: {type: String, require: true, unique: true},
         name: {type: String, require: true},
         password: {type: String, require: true},
-        image: {type: String, require: true}
+        image: {type: String}
     },{
         timestamps: true
     }
 )
 
-userSchema.pre("save", async function (next){
-    let user = this as UserDocument;
-
-    if(!user.isModified("password")) next();
-
-    const salt = await bcrypt.genSalt(config.get<number>("saltWorkFactor"))
+userSchema.pre("save", async function (next) {
+    let user = this as unknown as UserDocument; // Explicitly casting 'this' to UserDocument
+    if (!user.isModified("password")) return next();
+    const salt = await bcrypt.genSalt(c.get<number>("saltWorkFactor"))
     const hash = await bcrypt.hashSync(user.password, salt)
     user.password = hash;
 

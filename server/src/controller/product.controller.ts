@@ -1,13 +1,17 @@
 import {Request, Response} from "express"
-import { createProductInput, updateProductInput } from "../schema/product.schema";
-import { createProduct, deleteProduct, findAndUpdateProduct, findProduct } from "../service/product.service";
+import { createProductInput, updateProductInput } from "../schema/product.schema.js";
+import { createProduct, deleteProduct, findAndUpdateProduct, findProduct } from "../service/product.service.js";
 
 export async function createProductHandler(req: Request<{}, {}, createProductInput["body"]>, res: Response) {
     const userId = res.locals.user._id;
 
     const body = req.body
 
-    const product = await createProduct({...body, user: userId})
+    const product = await createProduct({
+        ...body, 
+        user: userId,
+        title: body.title ? body.title : ""
+    })
 
     return res.send(product)
 }

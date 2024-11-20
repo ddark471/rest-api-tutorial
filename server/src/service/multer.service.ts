@@ -1,11 +1,14 @@
-import multer from "multer";
-import path from "path";
+import { createRequire } from "module";
+import * as path from "path";
+
+const require = createRequire(import.meta.url);
+const multer = require("multer")
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
+    destination: (req:any, file:any, cb:any) => {
         cb(null, "./profileImage")        //path where images will be stored
     },
-    filename: (req, file, cb) => {
+    filename: (req:any, file:any, cb:any) => {
         cb(null, `${Date.now()}-${file.originalname}`)
     }
 })
@@ -25,5 +28,5 @@ const fileFilter = (req: any, file: any, cb: any) => {
 export const uploadImage = multer({
     storage: storage,
     fileFilter: fileFilter,
-    limits: {fileSize: 1024 * 1024 * 1024 * 5}
+    limits: {fileSize: 1024 * 1024 * 5}
 })

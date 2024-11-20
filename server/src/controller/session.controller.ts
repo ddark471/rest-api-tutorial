@@ -1,13 +1,12 @@
 import { Request, Response } from "express";
-import { validatePassword } from "../service/user.sevice";
-import { createSession, findSessions, updateSession } from "../service/session.service";
+import { validatePassword } from "../service/user.sevice.js";
+import { createSession, findSessions, updateSession } from "../service/session.service.js";
 import config from "config"
-import {signJwt} from "../utils/jwt.utils"
-import logger from "../utils/logger"
+import {signJwt} from "../utils/jwt.utils.js"
+import logger from "../utils/logger.js"
 
 export async function createSessionHandler(req: Request, res: Response) {
     const user = await validatePassword(req.body);
-    logger.info(user)
 
     if(!user) return res.status(401).send("Invalid email or password")
 

@@ -1,22 +1,18 @@
 import express from "express"
-import config from "config";
-import connect from "./utils/connect"
-import logger from "./utils/logger";
-import routes from "./utils/routes";
+import connect from "./utils/connect.js"
+import logger from "./utils/logger.js";
+import routes from "./utils/routes.js";
 import cors from "cors"
 
-const port = config.get<number>('port')
-
+const port = process.env.PORT || 8080
 const app = express();
 
 app.use(express.json())
 
-app.use(cors({ origin: ['http://localhost:3000', "*"] }));
-
+app.use(cors({ origin: "*" }));
 
 app.listen(port, async () => {
-    logger.info(`App is running at http://localhost:${port}`)
-
     await connect();
+    console.log(`localhost is running at port${port}`)
     routes(app);
-})
+})  

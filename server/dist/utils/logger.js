@@ -1,6 +1,5 @@
-import logger from "pino"
-import dayjs from "dayjs"
-
+import logger from "pino";
+import dayjs from "dayjs";
 const log = logger({
     base: {
         pid: false,
@@ -12,6 +11,5 @@ const log = logger({
             colorize: true, // Colors for readability
         }
     }
-})
-
+});
 export default log;

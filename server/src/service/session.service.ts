@@ -1,9 +1,9 @@
 import { FilterQuery, FlattenMaps, UpdateQuery } from "mongoose";
-import SessionModel, {SessionDocument} from "../models/session.model";
-import { signJwt, verifyJwt } from "../utils/jwt.utils";
-import { get } from "lodash";
+import SessionModel, {SessionDocument} from "../models/session.model.js";
+import { signJwt, verifyJwt } from "../utils/jwt.utils.js";
+import lodash from "lodash";
 import { Session } from "inspector/promises";
-import { findUser } from "./user.sevice";
+import { findUser } from "./user.sevice.js";
 import config from "config"
 
 export async function createSession(userId: string, userAgent: string){
@@ -23,9 +23,9 @@ export async function updateSession(query: FilterQuery<SessionDocument>, update:
 export async function reIssueAccessToken({refreshToken}: {refreshToken: string}){
     const {decoded} = verifyJwt(refreshToken);
     
-    if(!decoded || !get(decoded, "session")) return false;
+    if(!decoded || !lodash.get(decoded, "session")) return false;
 
-    const session = await SessionModel.findById(get(decoded, "session"))
+    const session = await SessionModel.findById(lodash.get(decoded, "session"))
 
     if(!session || !session.valid) return false;
 

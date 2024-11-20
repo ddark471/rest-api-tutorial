@@ -1,14 +1,12 @@
-import {get} from "lodash"
+import lodash from "lodash"
 import { Request, Response, NextFunction } from "express"
-import { verifyJwt } from "../utils/jwt.utils"
-import logger from "../utils/logger"
-import { reIssueAccessToken } from "../service/session.service"
+import { verifyJwt } from "../utils/jwt.utils.js"
+import logger from "../utils/logger.js"
+import { reIssueAccessToken } from "../service/session.service.js"
 
  const deserealizeUser = async (req: Request, res: Response, next: NextFunction) => {
-    const accessToken = get(req, "headers.authorization", "").replace(/^Bearer\s/, "")      //replacing bearer word in bearer token with emty string
-    let refreshToken = get(req, "headers.x-refresh", "")
-
-    console.log(accessToken)
+    const accessToken = lodash.get(req, "headers.authorization", "").replace(/^Bearer\s/, "")      //replacing bearer word in bearer token with emty string
+    let refreshToken = lodash.get(req, "headers.x-refresh", "")
 
     if(!accessToken) return next();
 

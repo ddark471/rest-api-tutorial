@@ -1,15 +1,17 @@
-import mongoose from "mongoose";
-import config from "config"
-import logger from "./logger"
+import logger from "./logger.js"
+import c from "config";
+import * as dotenv from "dotenv"
+import { createRequire } from "node:module";
 
 async function connect (){
-    const dbUri = config.get<string>("dbUri")
-    
+    dotenv.config();
+    const dbUri = process.env.dbUri || ""
+    const require = createRequire(import.meta.url);
+    const mongoose = require("mongoose")
     try{
         await mongoose.connect(dbUri)
-        logger.info("Succesfully connected")       
     }   catch(err){
-            logger.error("Failed to connect", err)
+            console.error(err)
             process.exit(1)
         }
 }

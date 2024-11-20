@@ -1,5 +1,5 @@
 import { FilterQuery, QueryOptions, UpdateQuery } from "mongoose";
-import ProductModel, { ProductDocument, ProductInput } from "../models/product.model";
+import ProductModel, { ProductDocument, ProductInput } from "../models/product.model.js";
 
 export async function createProduct(input: ProductInput){
     return ProductModel.create(input)

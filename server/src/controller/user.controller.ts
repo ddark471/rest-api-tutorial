@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import logger from "../utils/logger";
-import { createUser } from "../service/user.sevice";
-import { CreateUserInput } from "../schema/user.schema";
-import UserModel, { UserInput } from "../models/user.model";
+import logger from "../utils/logger.js";
+import { createUser } from "../service/user.sevice.js";
+import { CreateUserInput } from "../schema/user.schema.js";
+import UserModel, { UserInput } from "../models/user.model.js";
 
 export async function createUserHandler(req: Request<{}, {}, CreateUserInput["body"]>, res: Response){
     try{
@@ -18,7 +18,6 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput["bo
         const user = await createUser(userData);
         return res.send(user.toJSON());
     }   catch(e: any){
-        logger.error(e)
         return res.status(409).send(e.message)
     }
 }
@@ -30,7 +29,6 @@ export async function deleteUserHandler(req: Request, res: Response){
         if(!user){
             return res.status(404).send("User Not Found")
         }
-        logger.info("user found")
         await user.deleteOne();
         return res.status(200).json({message: "User has been sucessfully deleted"})
     }   catch(err){ 
@@ -41,7 +39,6 @@ export async function deleteUserHandler(req: Request, res: Response){
 
 export async function getUserDetailsHandler(req: Request, res: Response){
     const user = await res.locals.user;
-    console.log(user)
 
     if(user){
         return res.send(user);

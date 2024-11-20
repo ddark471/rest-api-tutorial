@@ -1,8 +1,13 @@
 import jwt from "jsonwebtoken"
-import config from "config"
+import { config } from "dotenv";
+// const publicKey = config.get<string>("publicKey")
+// const privateKey = config.get<string>("privateKey")
 
-const publicKey = config.get<string>("publicKey")
-const privateKey = config.get<string>("privateKey")
+// const publicKey = config.get<string>("publicKey")
+// const privateKey = config.get<string>("privateKey")
+config();
+const publicKey = process.env.publicKey || ""
+const privateKey = process.env.privateKey || ""
 
 export function signJwt(object: Object, options?: jwt.SignOptions | undefined){
     return jwt.sign(object, privateKey, {
@@ -14,7 +19,6 @@ export function signJwt(object: Object, options?: jwt.SignOptions | undefined){
 export function verifyJwt(token: string){
     try{
         const decoded = jwt.verify(token, publicKey, {algorithms: ["RS512"]})
-        console.log("decoded", decoded)
         return {
             valid: true,
             expired: false,
