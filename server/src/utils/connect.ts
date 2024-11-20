@@ -1,11 +1,9 @@
 import logger from "./logger.js"
 import c from "config";
-import * as dotenv from "dotenv"
 import { createRequire } from "node:module";
 
 async function connect (){
-    dotenv.config();
-    const dbUri = process.env.dbUri || ""
+    const dbUri = "mongodb+srv://ddarkk471:j0Lj24tVY6VRw5xQ@cluster0.7u6hh.mongodb.net"
     const require = createRequire(import.meta.url);
     const mongoose = require("mongoose")
     try{
