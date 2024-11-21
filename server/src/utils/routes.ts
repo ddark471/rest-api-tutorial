@@ -16,12 +16,14 @@ import UserModel from "../models/user.model.js";
 
 function routes(app: Express){
     app.get("/_ah/ready", (req: Request, res: Response) => res.status(200).send("OK"))
-    app.post("/api/users",   uploadImage.single("image"),  validateResource(createUserSchema), createUserHandler)       //post api endpoint for creating users
+
+    app.post("/api/users", uploadImage.single("image"), validateResource(createUserSchema), createUserHandler)       //post api endpoint for creating users
 
     app.get("/api/users/profileImage/:imageName", deserealizeUser,  (req: Request, res: Response) => {
         const imageName = req.params.imageName;
-        const imagePath = path.join(__dirname, "../../profileImage", imageName);
+        const imagePath = path.join(__dirname, "../..", "profileImage", imageName);
 
+        if(!fs.existsSync(imagePath)) fs.mkdirSync(imagePath, {recursive: true})
         fs.access(imagePath, fs.constants.F_OK, (err) => {
             if(err){
                 return res.status(404).send("Profile Image Not Found")
@@ -31,7 +33,7 @@ function routes(app: Express){
         })
     } )
 
-    app.delete("/api/users/:userId", deserealizeUser,deleteUserHandler)
+    app.delete("/api/users/:userId", deserealizeUser, deleteUserHandler)
 
     app.get("/api/users/all", deserealizeUser, getAllUsers)
 
