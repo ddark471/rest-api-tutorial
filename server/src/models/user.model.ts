@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt"
-import c from "config"
+import config from "config"
 import { NextFunction } from "express";
 import { createRequire } from "module";
 import mongoose, { Schema, Document } from "mongoose";
@@ -10,11 +10,6 @@ export interface UserInput {
     password: string;
     image: string;
 }
-
-// const require = createRequire(import.meta.url);
-// const mongoose = require("mongoose");
-// const Schema = mongoose.Schema;
-// const Document = mongoose.Document;
 
 export interface UserDocument extends UserInput, Document{
     createdAt: Date;
@@ -36,8 +31,8 @@ const userSchema: Schema = new Schema(
 userSchema.pre("save", async function (next) {
     let user = this as unknown as UserDocument; // Explicitly casting 'this' to UserDocument
     if (!user.isModified("password")) return next();
-    const salt = await bcrypt.genSalt(c.get<number>("saltWorkFactor"))
-    const hash = await bcrypt.hashSync(user.password, salt)
+    const salt = await bcrypt.genSalt(config.get<number>("saltWorkFactor"))
+    const hash = bcrypt.hashSync(user.password, salt)
     user.password = hash;
 
     return next();
