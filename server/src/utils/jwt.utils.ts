@@ -1,13 +1,11 @@
 import jwt from "jsonwebtoken"
-import { config } from "dotenv";
-// const publicKey = config.get<string>("publicKey")
-// const privateKey = config.get<string>("privateKey")
+import c from "config"
+import * as dotenv from "dotenv"
 
-// const publicKey = config.get<string>("publicKey")
-// const privateKey = config.get<string>("privateKey")
-config();
-const publicKey = process.env.publicKey || ""
-const privateKey = process.env.privateKey || ""
+dotenv.config({path: ".env"})
+
+const publicKey = process.env.PUBLICKEY || "";
+const privateKey = process.env.PRIVATEKEY || "";
 
 export function signJwt(object: Object, options?: jwt.SignOptions | undefined){
     return jwt.sign(object, privateKey, {
