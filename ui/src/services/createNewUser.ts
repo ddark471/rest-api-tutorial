@@ -21,10 +21,10 @@ export const createNewUser = async ({name, email, password, verifyPassword, imag
         email: email,
         password: password,
         passwordConfirmation: verifyPassword,
-        image: image
+        image: image    
     }
 
-    const response = await axios.post("http://localhost:1337/api/users", formData, {headers: {
+    const response = await axios.post("http://34.80.155.13:8080/api/users", formData, {headers: {
         Authorization: `Bearer ${accessToken}`
     }})
         .then(res => {

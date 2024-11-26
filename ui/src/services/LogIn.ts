@@ -2,7 +2,7 @@ import axios from "axios"
 import { login } from "../interfaces"
 
 export const LogIn = async ({email, password}:login) => {
-    const url = "http://localhost:1337/api/sessions"    
+    const url = "http://34.80.155.13:8080/api/sessions"    
     const body = {
         email: email,
         password: password

@@ -8,7 +8,7 @@ export const deleteUser = async (userId: string) => {
     }
 
     try{
-        const response = await axios.delete(`http://localhost:1337/api/users/${userId}`, {headers: {
+        const response = await axios.delete(`http://34.80.155.13:8080/api/users/${userId}`, {headers: {
             Authorization: `Bearer ${accessToken}`
         }})
         console.log(response)
