@@ -8,7 +8,7 @@ export const getAllUsers = async () => {
         Authorization: `Bearer ${accessToken}`
     }
 
-    const users = await axios.get("http://34.80.155.13:8080/api/users/all", {
+    const users = await axios.get("https://qahva-control.sytes.net/api/users/all", {
         headers: headers
     })
         .then(res => {

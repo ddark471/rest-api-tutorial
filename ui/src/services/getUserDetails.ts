@@ -14,7 +14,7 @@ export const getUserDetails = async () => {
         Authorization: `Bearer ${accessToken}`,
         "x-refresh":refreshToken
     }
-    const response = await axios.get("http://34.80.155.13:8080/api/users/details", {
+    const response = await axios.get("https://qahva-control.sytes.net/api/users/details", {
         headers: headers
     })
         .then(res => {

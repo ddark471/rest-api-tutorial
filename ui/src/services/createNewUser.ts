@@ -24,7 +24,7 @@ export const createNewUser = async ({name, email, password, verifyPassword, imag
         image: image    
     }
 
-    const response = await axios.post("http://34.80.155.13:8080/api/users", formData, {headers: {
+    const response = await axios.post("https://qahva-control.sytes.net/api/users", formData, {headers: {
         Authorization: `Bearer ${accessToken}`
     }})
         .then(res => {

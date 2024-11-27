@@ -7,7 +7,7 @@ export const getUserImage = async (imageUrl?:string) => {
     if(imageUrl === undefined) throw new Error("imageUrl must not be undefined") 
     let newImageUrl = imageUrl?.replace("profileImage/","");
     try{
-        const profileImage = await axios.get(`http://34.80.155.13:8080/api/users/profileImage/${newImageUrl}`, {headers: {
+        const profileImage = await axios.get(`https://qahva-control.sytes.net/api/users/profileImage/${newImageUrl}`, {headers: {
             Authorization: accessToken
         }, responseType: "blob"})
         console.log(profileImage.data)
