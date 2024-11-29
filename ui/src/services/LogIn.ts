@@ -14,11 +14,12 @@ export const LogIn = async ({email, password}:login) => {
         }
     })
         .then(res =>{
-                console.log(res)
-                return res.data
+                return res
             })
         .catch(err => {
-            console.error(err)
+            if(err){
+                throw new Error(err.response.data)
+            }
         })
 
     return response;

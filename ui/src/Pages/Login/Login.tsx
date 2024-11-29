@@ -1,4 +1,5 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import style from "./login.module.scss"
 import CustomInput from '../../components/CustomInput'
 import LoginButton from './components/LoginButton/LoginButton'
@@ -9,9 +10,12 @@ import { login } from '../../interfaces'
 import { useLogIn } from '../../utils/useLogIn'
 import { redirect, useNavigate } from 'react-router-dom'
 import { AuthContext } from '../../context/AuthContext'
+import Icons from '../../Icons'
 
   const Login = () => {
-    const {data, mutate, error} = useLogIn();
+    const {data, mutate, error, isError} = useLogIn();
+    const [showToast, setShowToast] = useState<boolean>(false)
+    const [toastClass, setToastClass] = useState<"toastShow" | "toastHide" | "">("")
     const navigate = useNavigate();
     const handleLogInSubmit = ({email, password}: login, actions: any) => {
       if(formik.values.email && formik.values.password){
@@ -46,15 +50,37 @@ import { AuthContext } from '../../context/AuthContext'
     
     useEffect(() => {
       if(authContext && data){
-        authContext.login(data?.accessToken)
-        localStorage.setItem("refreshToken", data?.refreshToken)
+        authContext.login(data?.data.accessToken)
+        localStorage.setItem("refreshToken", data?.data.refreshToken)
         navigate("/home")
       }
     }, [data, navigate])
-    
+
+    useEffect(() => {
+        setShowToast(true);
+        setToastClass("toastShow")
+        setTimeout(() => setToastClass("toastHide"), 5000)
+        setTimeout(() => {
+          setShowToast(false)
+          setToastClass("")
+        }, 6000)
+    }, [isError]) 
 
     return (
       <form className={style.wrapper} autoComplete='off' onSubmit={formik.handleSubmit}>
+        {isError && showToast && (
+          createPortal(
+            <div className={`${style.toast} ${style[toastClass]}`}>
+              <div className={style.toast__icon}>
+                <Icons type='fill' name='InfoCircle'/>
+              </div>
+              <span className={style.toast__text}>
+                {typeof error === "string" ? error : "Login Failed"}
+              </span>
+            </div>, 
+          document.getElementById("portal") as HTMLElement
+          )
+        )}
         <h1 className={style.wrapper__text}>Вход в систему</h1>
           <div className={style.wrapper__input}>
             <CustomInput
@@ -66,7 +92,6 @@ import { AuthContext } from '../../context/AuthContext'
               value={formik.values.email}
               touched={formik.touched.email}
               error={formik.errors.email}
-
             />
             <CustomInput
               inputName='password'
