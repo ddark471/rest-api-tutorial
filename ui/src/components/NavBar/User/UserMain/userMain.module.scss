@@ -1,5 +1,7 @@
 @use "../../../../mixins.scss" as *;
 
+
+
 .userMain{
     max-width: 280px;
     width: 100%;
@@ -39,18 +41,28 @@
     max-width: 100%;
     width: 100%;
     height: 30%;
-    @include row_centered();
+    @include column_centered();
+    gap: 15px;
 }
 
 .header__image{
     width: 80px;
     height: 80px;
+    background-color: lightgrey;
+    border-radius: 44px;    
 }
 
 .image{
     width: 100%;
     height: 100%;
     border-radius: 80px;
+}
+
+.header__text{
+    @include inter();
+    font-size: 18px;
+    font-weight: 500;
+    color: #282828;
 }
 
 .container__main{

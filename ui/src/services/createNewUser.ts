@@ -4,8 +4,6 @@ import { NewUser } from "../interfaces";
 export const createNewUser = async ({name, email, password, verifyPassword, image}: NewUser) => {
     let accessToken = localStorage.getItem("accessToken");
     if(!accessToken) throw new Error("No access token");
-    
-    console.log(image)
 
     let formData = new FormData();
     formData.append("name", name)
@@ -28,10 +26,9 @@ export const createNewUser = async ({name, email, password, verifyPassword, imag
         Authorization: `Bearer ${accessToken}`
     }})
         .then(res => {
-            console.log(res);
             return res.data
         })  .catch(err => {
-            console.error(err);
+            throw err
         })
     
     return response;

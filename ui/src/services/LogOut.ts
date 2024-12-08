@@ -11,9 +11,7 @@ export const LogOut = async () => {
             console.error(err)
         })
 
-    if(deleteSession){
-        localStorage.clear();
-    }
+    localStorage.clear()
 
     return deleteSession
 }

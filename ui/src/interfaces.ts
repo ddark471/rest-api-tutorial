@@ -8,16 +8,9 @@ export interface IconsProp{
     name: string;
 }
 
-export interface AuthContextProps {
-    token: string | null;
-    setToken: React.Dispatch<React.SetStateAction<string | null>>;
-    login: (token: string) => void;
-    logout: () => void;
-    user: User | null | undefined;
-}
 
 export interface User{
-    _id: number;
+    _id: string;
     __v: number;
     name: string;
     email: string;
@@ -27,6 +20,21 @@ export interface User{
     image: string;
     iat: number;
     exp: number;
+}
+
+export interface userDetails{
+    decoded: User
+    valid: boolean;
+    expired: boolean;
+}
+
+export interface AuthContextProps {
+    token: string | null;
+    setToken: React.Dispatch<React.SetStateAction<string | null>>;
+    login: (token: string) => void;
+    logout: () => void;
+    user: User | null | undefined;
+    isAuthenticated: boolean | null;
 }
 
 export interface Users{
@@ -42,5 +50,12 @@ export interface NewUser{
 }
 
 export interface NewUserImage{
+    image: File | null;
+}
+
+export interface Product{
+    title: string;
+    description: string;
+    price: number;
     image: File | null;
 }

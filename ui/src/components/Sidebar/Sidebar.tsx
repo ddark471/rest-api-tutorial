@@ -5,9 +5,9 @@ import SubMenu from './components/SubMenu/SubMenu'
 const Sidebar = () => {
   return (
     <div className={style.sidebar}>
-      <a className={style.sidebar__text} href='/home'>Home</a>
-      <a className={style.sidebar__text} href='/home/users'>Users</a>
-      <a className={style.sidebar__text} href='/home/products'>Products</a>
+      <a className={style.sidebar__text} href='/'>Home</a>
+      <a className={style.sidebar__text} href='/users'>Users</a>
+      <a className={style.sidebar__text} href='/products'>Products</a>
       {/* <SubMenu
         parentText='Users'
         children={["Admin", "Users"]}

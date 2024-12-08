@@ -11,7 +11,6 @@ const User = () => {
   const [click, setClick] = useState<boolean>(false);
   const handleClick = () => setClick(!click)
   const [profileImage, setProfileImage] = useState<string>();
-  let userImage;
   useEffect(() => {
     const provideUserImage = async () => {
       if(user?.image){
@@ -26,7 +25,7 @@ const User = () => {
     provideUserImage();
   }, [user])
 
-
+  console.log(user)
 
   return (
     click ? (
@@ -41,11 +40,11 @@ const User = () => {
           {user?.email}
         </span>
       </div>
-      <div className={style.user__image}  onClick={handleClick}>
-        <div className={style.image}>
+      <div className={style.userImage__container}  onClick={handleClick}>
+        <div className={style.container__image}>
           {
             profileImage ? (
-              <img src={profileImage} className={style.image__}/>
+              <img src={profileImage} className={style.image}/>
             ) : (
               <span className={style.image__text}>{user?.name[0]}</span>
             )

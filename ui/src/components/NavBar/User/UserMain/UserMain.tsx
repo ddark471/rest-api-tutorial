@@ -21,7 +21,6 @@ const UserMain:React.FC<UserMainProps> = ({setClick, image}) => {
       logout(); 
     }
   }
-  console.log(image)
   return (
     <div className={style.userMain}>
         <div className={style.userMain__icon} onClick={() => setClick(false)}>
@@ -38,6 +37,7 @@ const UserMain:React.FC<UserMainProps> = ({setClick, image}) => {
                   )
                 }
               </div>
+              <span className={style.header__text}>{user?.name}</span>
             </div>
             <hr/>
             <div className={style.container__main}>

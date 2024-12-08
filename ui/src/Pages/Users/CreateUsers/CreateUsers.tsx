@@ -122,7 +122,7 @@
             error={formik.errors.image}
             touched={formik.touched.image}
           />
-          <LoginButton/>
+          <LoginButton text="Создать пользователя"/>
         </div>
       </form>
     )

@@ -5,9 +5,9 @@ import { getDate } from '../../utils/getDate';
 import Icons from '../../Icons';
 import OptionsButton from './components/OptionsButton';
 import UserOptions from './components/UserOptions';
-import UserButton from './components/UserButton';
+import CreateItemsButton from '../../components/CreateItemsButton';
 
-const User = () => {
+const Users = () => {
     const usersQuery = useGetAllUsers();
     const [showUserOptions, setShowUserOptions] = useState<boolean>(false);
     const [currentUserIndex, setCurrentUserIndex] = useState<number>(0)
@@ -30,7 +30,7 @@ const User = () => {
   return (
     <div className={style.users}>
         <div className={style.user__createNew}>
-            <UserButton/>
+            <CreateItemsButton text='Create New User' location="/users/create"/>
         </div>
         <div className={style.users__table}>
         <table className={style.users__main}>
@@ -78,4 +78,4 @@ const User = () => {
   )
 }
 
-export default User
+export default Users

@@ -4,11 +4,9 @@ import { LogIn } from '../services/LogIn'
 import { login } from '../interfaces'
 
 export const useLogIn = () => {
-    const {data, mutate, error} = useMutation({
+    const {data, mutate, error, isError} = useMutation({
         mutationKey: ["LogIn"],
         mutationFn: ({email, password}: login) => LogIn({email, password}),
-        onSuccess: () => console.log()
     })
-
-    return {data, mutate, error}
+    return {data, mutate, error, isError}
 }

@@ -7,10 +7,10 @@ interface Iprops{
   inputName: string;
   placeholder: string;
   name: string;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value?: string;
-  error: string | undefined;
-  touched: boolean | undefined;
+  error?: string | undefined;
+  touched?: boolean | undefined;
   accept?: string;
 }
 
@@ -58,5 +58,5 @@ const CustomInput:React.FC<Iprops> = ({inputType, inputName, placeholder, name, 
   )
 
 }
-
+// Bug in backend, valid, expired returning false & decoded is returning null
 export default CustomInput

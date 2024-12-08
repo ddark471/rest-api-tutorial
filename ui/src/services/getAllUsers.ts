@@ -1,9 +1,8 @@
 import axios from "axios";
 
 export const getAllUsers = async () => {
-    let accessToken = localStorage.getItem("accessTokeen");
+    let accessToken = localStorage.getItem("accessToken");
     if(!accessToken) console.error("no access Token");
-    console.log("getAllUsers executed")
     let headers = {
         Authorization: `Bearer ${accessToken}`
     }
@@ -12,13 +11,10 @@ export const getAllUsers = async () => {
         headers: headers
     })
         .then(res => {
-            console.log(res)
             return res.data
         })  
         .catch(err => {
-            console.error(err)
             throw err
         })
-    console.log(users)
     return users
 }

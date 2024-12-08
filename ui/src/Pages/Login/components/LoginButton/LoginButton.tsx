@@ -3,7 +3,11 @@ import style from "./loginButton.module.scss"
 import { Button } from 'antd'
 import { useNavigate } from 'react-router-dom'
 
-const LoginButton = () => {
+interface props{
+  text?:string;
+}
+
+const LoginButton:React.FC<props> = ({text}) => {
 
   return (
     <Button
@@ -11,7 +15,7 @@ const LoginButton = () => {
       className={style.loginButton}
       htmlType='submit'
     >
-      <span className={style.loginButton__text}>Войти</span>
+      <span className={style.loginButton__text}>{text}</span>
     </Button>
   )
 }
