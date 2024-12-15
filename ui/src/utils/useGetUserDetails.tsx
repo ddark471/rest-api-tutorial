@@ -2,13 +2,13 @@ import { useQuery } from '@tanstack/react-query'
 import { getUserDetails } from '../services/getUserDetails'
 
 export const useGetUserDetails = (enable: boolean) => {
-    console.log(enable)
     const query = useQuery({
         queryKey: ["GetUserDetails"],
-        queryFn: () => getUserDetails()
+        queryFn: () => getUserDetails(),
+        staleTime: 300000,
+        refetchOnWindowFocus: false,
+        refetchOnMount: false
     })
-
-    console.log(query.data)
 
     return query
 }

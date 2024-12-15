@@ -1,0 +1,18 @@
+@use "../../../../mixins.scss" as *;
+
+.category__input{
+    max-width: 100%;
+    width: 100%;
+    height: 100px;
+}
+
+.input__text{
+    border: none;
+}
+
+.input{
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+    border: none;
+}

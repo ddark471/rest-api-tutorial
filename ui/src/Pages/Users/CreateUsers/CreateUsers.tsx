@@ -18,8 +18,9 @@
       image: Yup.mixed<File>()
       .test("fileSize", "File too large", (value: File | null | undefined) => !value || (value && value.size <= 1024 * 1024 * 5))
       .test("fileType", "Unsupported file format", (value: File | null | undefined) =>
-        !value || (value && ["image/jpg", "image/jpeg", "image/png"].includes(value.type))
-      ), 
+        !value || (value && ["image/jpg", "image/jpeg", "image/png"].includes(value.type)))
+      .required("image is required")
+      , 
       password: Yup.string()
         .required("Password is required")
         .min(8, "Password must not be shorter than 8 chars")

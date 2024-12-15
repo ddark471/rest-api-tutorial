@@ -1,0 +1,35 @@
+@use "../../../../mixins.scss" as *;
+
+.inactive{
+  width: 10%;
+  height: 10%;
+  background-color: #FEE;
+  padding: 4px 8px;
+  border-radius: 12px;
+  @include inter();
+  color: #FF5F5F;
+  font-size: 14px;
+  text-align: center;
+  font-weight: 600;
+  user-select: none !important;
+  &:hover{
+    cursor: pointer;
+  }
+}
+
+.active{
+  width: 10%;
+  height: 10%;
+  background-color: #EAFFF4;
+  padding: 4px 8px;
+  border-radius: 12px;
+  @include inter();
+  font-size: 14px;
+  text-align: center;
+  font-weight: 600;
+  color: #1EBE67;
+    user-select: none !important;
+  &:hover{
+    cursor: pointer;
+  }
+}

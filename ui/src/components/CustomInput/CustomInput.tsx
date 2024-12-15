@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import style from "./customInput.module.scss"
 import { Input } from 'antd'
+
 
 interface Iprops{
   inputType: string;
@@ -8,7 +9,7 @@ interface Iprops{
   placeholder: string;
   name: string;
   handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  value?: string;
+  value?: string | number;
   error?: string | undefined;
   touched?: boolean | undefined;
   accept?: string;
@@ -16,7 +17,6 @@ interface Iprops{
 
 const CustomInput:React.FC<Iprops> = ({inputType, inputName, placeholder, name, handleChange, value, error, touched,accept}) => {
   const [focus, setFocus] = useState<boolean>(false);
-
   const handleFocus = () => {
     if(focus === true) {
       setFocus(false);

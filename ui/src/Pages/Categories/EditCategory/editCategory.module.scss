@@ -1,0 +1,50 @@
+@use "../../../mixins.scss" as *;
+
+.categories__create{
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+    @include flex_column();
+    gap: 10px;
+}
+
+.create__text{
+    @include inter();
+    font-weight: 500;
+}
+
+.create__main{
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+    @include flex_column();
+    gap: 30px;
+    & label{
+        max-width: 30%;
+        height: 10%;
+    }
+}
+
+.main__row{
+    max-width: 100%;
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    & label{
+        max-width: 25%;
+        height: 100%;
+    }
+}
+
+
+.row__description{
+    max-width: 25%;
+    width: 100%;
+    height: 100%;
+
+}
+
+.button{
+    max-width: 20%;
+    width: 100%;
+}

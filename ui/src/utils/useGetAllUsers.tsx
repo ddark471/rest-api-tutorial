@@ -8,5 +8,5 @@ export const useGetAllUsers = () => {
         queryFn: () => getAllUsers()
     })
 
-    return query
+    return query    
 }

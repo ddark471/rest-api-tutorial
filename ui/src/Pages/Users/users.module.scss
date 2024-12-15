@@ -11,7 +11,7 @@
 .user__createNew{
     max-width: 100%;
     width: 100%;
-    height: 8%;
+    height: 10%;
     display: flex;
     justify-content: flex-end;
 }
@@ -19,7 +19,6 @@
 .users__table{
     max-width: 100%;
     width: 100%;
-    overflow: visible;
     border: 1px solid rgba(11, 108, 195, 0.25);
     border-radius: 12px !important;
 }
@@ -27,8 +26,9 @@
 .users__main{
     max-width: 100%;
     width: 100%;
-    border-collapse: collapse;
     overflow: scroll;
+    border-collapse: collapse;
+    border: none !important;
 }
 
 .main__header{
@@ -55,14 +55,12 @@
 .main__body{
     max-width: 100%;
     width: 100%;
-    height: 5%;
-    position: relative;
+    height: 72px;
 }
 
 .body__item{
     border-top: 1px solid rgba(11, 108, 195, 0.25);
     border-right: 1px solid rgba(11, 108, 195, 0.25);
-    height: 72px;
     padding: 0px 20px;
 }
 
@@ -72,7 +70,8 @@
 
 .body__item:nth-last-child(1){
     border-right: none !important;
-    width: 0 !important;
+    width: 0;
+    position: relative;
 }
 
 .icon__item{
@@ -85,9 +84,10 @@
 }
 
 .item__options{
-    max-width: 208px;
-    width: 100%;
-    height: max-content;
+    max-width: 208px !important;
+    min-width: 208px !important;
+    width: 100% !important;
+    height: max-content !important;
     position: absolute;
     z-index: 10000000000;
     right: 10px;

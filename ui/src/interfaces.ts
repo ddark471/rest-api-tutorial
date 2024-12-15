@@ -59,3 +59,46 @@ export interface Product{
     price: number;
     image: File | null;
 }
+
+export interface newCategoryProps{
+    categNameRus: string;
+    categNameUzb: string;
+    categDescRus: string;
+    categDescUzb: string;
+    categSlug: string;
+    categStatus: boolean;
+    created_at?: string;
+    modified_at?: string;
+}
+
+export interface ProductFormValues {
+    productNameRu: string;
+    productNameUz: string;
+    descriptionRu: string;
+    descriptionUz: string;
+    price: string | number;
+    slug: string;
+    category: number;
+    available_volumes: {
+      volume: number;
+      unit: string;
+    }[];
+    is_active: boolean;
+    productImage: File | null;
+}
+
+export interface ProductProps{
+    productNameRu: string;
+    productNameUz: string;
+    descriptionRu: string;
+    descriptionUz: string;
+    available_volumes: {
+        volume: number;
+        unit: string;
+    }[]
+    productPrice: number;
+    category: number;
+    productSlug: string;
+    is_active: boolean;
+    image: string;
+}

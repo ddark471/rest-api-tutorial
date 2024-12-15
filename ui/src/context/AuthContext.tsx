@@ -30,7 +30,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             localStorage.setItem("accessToken", token);
             setIsAuthenticated(true)
             setEnable(true)
-            console.log(enable)
         }
     }, [token]);
     
@@ -47,19 +46,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         navigate('/login');
         setIsAuthenticated(false)
     };
-
-    const userQuery = useGetUserDetails(enable);
+    const shouldFetchUser = Boolean(isAuthenticated && token && !user);
+    const userQuery = useGetUserDetails(shouldFetchUser);
     useEffect(() => {
-        if(userQuery){
-            setUser(userQuery.data?.decoded) 
-            console.log(user)
-        }
-        if(userQuery && userQuery.data?.expired === true){
-            logout()
-        }
+        if (userQuery && userQuery.data) {
+            const { decoded, valid } = userQuery.data;
+            if (valid === false || decoded === null) {
+              logout();
+            } else {
+              setUser(decoded);
+            }
+          }
     }, [userQuery])
 
-    if(token && userQuery.isLoading){
+    if(shouldFetchUser && userQuery.isLoading){
         return <h1>Loading...</h1>
     }
 
