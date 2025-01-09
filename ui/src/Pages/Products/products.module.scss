@@ -5,14 +5,14 @@
     width: 100%;
     height: 100%;
     @include flex_column();
-    gap: 20px;
+    gap: 40px;
     overflow-y: hidden;
 }
 
 .products__create{
     max-width: 100%;
     width: 100%;
-    height: 10%;
+    height: 8%;
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-between;
@@ -26,7 +26,7 @@
 .products__main{
     max-width: 100%;
     width: 100%;
-    height: 100%;
+    height: 50vh;
     overflow-y: scroll;
     &::-webkit-scrollbar{
         display: none !important;
@@ -47,6 +47,14 @@
     box-sizing: border-box;
 }
 
+.item__code{
+    max-width: 100%;
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    gap: 10px;
+}
+
 .item__image{
     width: 100px;
     height: 100%;
@@ -55,7 +63,7 @@
         height: 100%;
     border-top-left-radius: 12px;
     border-bottom-left-radius: 12px;
-    
+    object-fit: cover;
     }
     background-color: lightgrey;
     border-top-left-radius: 12px;
@@ -64,21 +72,28 @@
 }
 
 .item__body{
-    max-width: 100%;
-    padding: 20px;
+    max-width: 30%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    & div:nth-child(1){
-        max-width: 100%;
-    }
-    & div:nth-child(2){
-        height: max-content;
-        z-index: 1000000000000000000000000000000000000000000;
-    }
     position: relative;
-
-}
+    &:nth-of-type(1){
+        max-width: 20%;
+    }
+    &:nth-of-type(2){
+        max-width: 25%;
+    }
+    &:nth-last-of-type(2){
+        max-width: 10% !important;
+    }
+    &:nth-last-of-type(1){
+        max-width: 10% !important;
+        width: 100%;
+        display: flex;
+        align-items: flex-end
+    }
+}   
 
 
 
@@ -88,8 +103,6 @@
 }
 
 .status__active{
-    max-width: 100%;
-    width: 100%;
     padding: 4px 8px;
     border-radius: 12px;
     text-align: center;
@@ -101,8 +114,6 @@
 }
 
 .status__inactive{
-    max-width: 100%;
-    width: 100%;
     padding: 4px 8px;
     border-radius: 12px;
     text-align: center;
@@ -111,4 +122,30 @@
     background-color: #FEE;
     color: #ff5f5f;
     font-weight: 600;
+}
+
+.item__options{
+    position: absolute;
+    max-width: 100px !important;
+    width: 100% !important;
+    height: 100%;
+}
+
+.dropdown{
+    display: flex;
+    gap: 10px;
+}
+
+.dropdown__text{
+    @include inter();
+    font-size: 15px;
+}
+
+.dropdown__icon{
+    width: 20px;
+    height: 20px;
+    & svg{
+        width: 100%;
+        height: 100%;
+    }
 }

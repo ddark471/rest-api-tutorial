@@ -1,23 +1,63 @@
-import React, {useState, useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import style from "./createProducts.module.scss"
 import CustomInput from '../../../components/CustomInput'
 import LoginButton from '../../Login/components/LoginButton/LoginButton'
 import * as Yup from "yup"
-import { useFormik } from 'formik'
+import { FieldArray, useFormik, getIn, FormikProps } from 'formik'
+import { Formik } from 'formik'
 import DescriptionInput from '../../Categories/components/DescriptionInput'
-import { Input } from 'antd'
-import { useGetCategories } from '../../../utils/useGetCategories'
+import { Button, Input, message, Select, Typography, Upload, UploadProps } from 'antd'
+import {UploadOutlined} from "@ant-design/icons"
+import { useGetCategories } from '../../../hooks/useGetCategories'
 import StatusToggle from '../../Categories/components/StatusToggle'
-import { useSaveProductImage } from '../../../utils/useSaveProductImage'
-import { ProductFormValues } from '../../../interfaces'
-import { useCreateNewProduct } from '../../../utils/useCreateNewProduct'
+import { useSaveProductImage } from '../../../hooks/useSaveProductImage'
+import { useCreateNewProduct } from '../../../hooks/useCreateNewProduct'
 import { useNavigate } from 'react-router-dom'
-import { createPortal } from 'react-dom'
 import Icons from '../../../Icons'
+import { Riple } from 'react-loading-indicators'
+import { handleCreateProduct } from '../../../utils/utilizedFunctions'
+import "../../Users/users.antd.scss"
 
 const CreateProducts = () => {
-    const categories = useGetCategories();
-    const [showCategories, setShowCategories] = useState<boolean>(false)
+    // const categories = useGetCategories();  
+    const saveImage = useSaveProductImage();
+    const newProduct = useCreateNewProduct();
+    const navigate = useNavigate();
+    const [messageApi, contextHolder] = message.useMessage()
+    const {Title} = Typography
+
+    useEffect(() => {
+        if(newProduct.isLoading) {
+            messageApi.loading({
+                content: "Creating product...",
+                duration: 0,
+                key: 'product-create'
+            });
+        }
+        
+        if(newProduct.status === "success"){
+            messageApi.destroy('product-create'); // Destroy loading message
+            messageApi.success({
+                content: "Successfully created product",
+                duration: 5,
+                icon: <span/>,
+                onClose() {
+                    navigate("/products")
+                },
+            });
+        }
+        
+        if(newProduct.status === "error"){
+            messageApi.destroy('product-create'); // Destroy loading message
+            messageApi.error({
+                content: "Couldn't create product",
+                duration: 5,
+                className: "toastError",
+                icon: <span/>        
+            });
+        }
+    }, [newProduct.status, newProduct.isLoading, messageApi, navigate])
+
     const productValidationSchema = Yup.object().shape({
         productNameRu: Yup.string()
             .required("Название продукта обязательно")
@@ -32,15 +72,23 @@ const CreateProducts = () => {
             .required("Produkt ta'rifi majburiy")
             .max(80, "Produkt ta'rifi 80ta simvoldan oshishi mumkin emas"),
         price: Yup.number()
-            .required("Product price is reqruired"),
+            .required("Product price is reqruired")
+            .positive("Price must be positive"),
         slug: Yup.string()
             .required("Slug is required"),
         category: Yup.number()
             .required("Category is required"),
         available_volumes: Yup.array().of(
                 Yup.object().shape({
-                  volume: Yup.number(),
+                  volume: Yup.number()
+                    .required("Volume is required")
+                    .positive("Volume must be positive")
+                    .min(0, "minimum value of the volume")
+                    .max(10, "maximum value of the volume"),
                   unit: Yup.string()
+                    .required("Unit is required")
+                    .min(1, "minimum number of characters")
+                    .max(5, "maximum number of characters"),
                 })
               ).min(1).max(3),
         is_active: Yup.boolean(),
@@ -51,303 +99,198 @@ const CreateProducts = () => {
             )
             .required("Product Image is required")
     })
-    const saveImage = useSaveProductImage();
-    const newProduct = useCreateNewProduct();
-    const [showToast, setShowToast] = useState<boolean>(false)
-  const [toastClass, setToastClass] = useState<"toastShow" | "toastHide" | "">("")
-    const navigate = useNavigate();
-    
-    const handleSubmit = (values: any, actions: any) => {
-        console.log(values);
-        
-        if (values.slug && values.productImage) {
-            // Extract the original file and its type
-            const originalFile = values.productImage;
-            const fileExtension = originalFile.name.split('.').pop(); // Get file extension (e.g., jpg, png)
-    
-            // Create a new file with the renamed name
-            const renamedFile = new File(
-                [originalFile], // File content
-                `${values.slug}.${fileExtension}`, // New name
-                { type: originalFile.type } // Preserve the MIME type
-            );
-    
-            console.log("Renamed File:", renamedFile);
-            saveImage.mutate(renamedFile, {
-                onSuccess: (response) => {
-                    // Assuming the uploaded image URL is in `response.data`
-                    const imageUrl = response.data; // Adjust based on actual response structure
-                    console.log(imageUrl)
-                    // Call createNewProduct after the image upload is successful
-                    newProduct.mutate(
-                        {
-                            productNameRu: values?.productNameRu,
-                            productNameUz: values?.productNameUz,
-                            descriptionRu: values?.descriptionRu,
-                            descriptionUz: values?.descriptionUz,
-                            productPrice: values?.price,
-                            productSlug: values?.slug,
-                            category: values?.category,
-                            available_volumes: values?.available_volumes,
-                            image: imageUrl,
-                            is_active: values?.is_active,
-                        },
-                        {
-                            onSuccess: () => {
-                                // Reset the form on success
-                                actions.setSubmitting(false);
-                                actions.resetForm();
-                            },
-                            onError: (error) => {
-                                console.error("Error creating product:", error);
-                            },
-                        }
-                    );
-                },
-                onError: (error) => {
-                    console.error("Error uploading image:", error);
-                },
-            });
-        }
-    };
 
-    const formik = useFormik<ProductFormValues>({
-        validationSchema: productValidationSchema,
-        initialValues: {
-            productNameRu: "",
-            productNameUz: "",
-            descriptionRu: "",
-            descriptionUz: "",
-            price: "",
-            slug: "",
-            category: 0,
-            available_volumes: [
-                {
-                    volume: 0,
-                    unit: ""
-                }
-            ],
-            is_active: false,
-            productImage: null,
-        },  
-        onSubmit: handleSubmit
-    })
-    
-    const handleCategoryChooseClick = (id: number) => {
-        formik.setFieldValue("category", id)
-        setShowCategories(false)
-    }
-
-    const isVolumeErrorObject = (
-        error: any
-    ): error is { volume: string; unit: string } => {
-        return (
-            error &&
-            typeof error === "object" &&
-            "volume" in error &&
-            "unit" in error
-        );
-    };
-    if(!newProduct.isLoading) console.log(newProduct.data)
-    if(formik.errors) console.error(formik.errors)
-        useEffect(() => {
-            setShowToast(true);
-            setToastClass("toastShow")
-            setTimeout(() => setToastClass("toastHide"), 5000)
-            setTimeout(() => {
-              setShowToast(false)
-              setToastClass("")
-            }, 6000)
-            if (newProduct.isSuccess) {
-                setTimeout(() => {
-                  navigate("/products"); // Replace with your desired route
-                }, 6000); // Navigate after 6 seconds (after the toast disappears)
-              }
-        }, [newProduct.isError, newProduct.isSuccess]) 
   return (
     <div className={style.createProducts}>
-        {newProduct.isError && showToast && (
-        createPortal(
-          <div className={`${style.toast} ${style[toastClass]}`}>
-            <div className={style.toast__icon}>
-              <Icons type='fill' name='InfoCircle'/>
-            </div>
-            <span className={style.toast__text}>
-              {typeof newProduct.error === "string" ? newProduct.error : "Coulnd't create product"}
-            </span>
-          </div>, 
-        document.getElementById("portal") as HTMLElement
-        )
-      )}
-      {newProduct.isSuccess && showToast && (
-        createPortal(
-          <div className={`${style.toastSuccess} ${style[toastClass]}`}>
-            <div className={style.toast__icon}>
-              <Icons type='fill' name='InfoCircle'/>
-            </div>
-            <span className={style.toast__text}>
-              Successfully created product
-            </span>
-          </div>, 
-        document.getElementById("portal") as HTMLElement
-        )
-      ) }
-        <h1>Create Product</h1>
-        <form className={style.createProducts__main} onSubmit={formik.handleSubmit}>
-            <div className={style.main__row}>
-                <CustomInput
-                    inputType='text'
-                    inputName='productNameRu'
-                    placeholder='Ввведите навзание продукта'
-                    name="Название продукта"
-                    handleChange={formik.handleChange}
-                    value={formik.values.productNameRu as string}
-                    error={formik.errors.productNameRu as string}
-                    touched={formik.touched.productNameRu as boolean}
-                />
-                <CustomInput
-                    inputType='text'
-                    inputName='productNameUz'
-                    placeholder='Produkt nomini kirgazing'
-                    name="Produkt Nomi"
-                    handleChange={formik.handleChange}
-                    value={formik.values.productNameUz as string}
-                    error={formik.errors.productNameUz as string}
-                    touched={formik.touched.productNameUz as boolean}
-                />
-            </div>
-            <div className={style.main__row}>
-                <DescriptionInput
-                    inputName='descriptionRu'
-                    name='Описаие продукта'
-                    placeholder='Введите описание продукта'
-                    handleChange={formik.handleChange}
-                    value={formik.values.descriptionRu as string}
-                    touched={formik.touched.descriptionRu as boolean}
-                    error={formik.errors.descriptionRu as string}
-                />
-                <DescriptionInput
-                    inputName='descriptionUz'
-                    name="Produkt ta'rifi"
-                    placeholder="Produkt ta'rifini kirgazing"
-                    handleChange={formik.handleChange}
-                    value={formik.values.descriptionUz as string}
-                    touched={formik.touched.descriptionUz as boolean}
-                    error={formik.errors.descriptionUz as string}
-                />
-            </div>
-            {formik.values.available_volumes.map((item: { volume: number; unit: string }, index: number) => {
-    const currentError = formik.errors.available_volumes
-    ? formik.errors.available_volumes[index]
-    : null;
-
-const volumeError = currentError && isVolumeErrorObject(currentError)
-    ? currentError.volume
-    : "";
-
-const unitError = currentError && isVolumeErrorObject(currentError)
-    ? currentError.unit
-    : "";
-
-    return (
-        <div className={style.main__row} key={index}>
-            <CustomInput
-                inputType="text"
-                inputName={`available_volumes[${index}].volume`}
-                placeholder="Enter measuring volume"
-                name="Volume"
-                handleChange={formik.handleChange}
-                value={item.volume}
-                error={volumeError}
-                touched={
-                    Array.isArray(formik.touched.available_volumes)
-                        ? formik.touched.available_volumes[index]?.volume
-                        : false
-                }
-            />
-            <CustomInput
-                inputType="text"
-                inputName={`available_volumes[${index}].unit`}
-                placeholder="Enter measuring unit"
-                name="Unit"
-                handleChange={formik.handleChange}
-                value={item.unit}
-                error={unitError}
-                touched={
-                    Array.isArray(formik.touched.available_volumes)
-                        ? formik.touched.available_volumes[index]?.unit
-                        : false
-                }
-            />
-        </div>
-    );
-})}
-            <div className={style.main__row}>
-                <CustomInput
-                    inputType='text'
-                    inputName='price'
-                    placeholder='Enter product price'
-                    name="Product Price"
-                    handleChange={formik.handleChange}
-                    value={formik.values.price}
-                    error={formik.errors.price as string}
-                    touched={formik.touched.price as boolean}
-                />
-                <label className={style.category__input}>
-                    <span className={style.input__prefix}>Category</span>
-                    <Input
-                        name='category'
-                        type='text'
-                        value={formik.values.category as number}
-                        onChange={formik.handleChange}
-                        onClick={() => setShowCategories(!showCategories)}
-                        variant='borderless'
-                        className={style.input}
-                        placeholder='Select category'
-                    />
+        {contextHolder}
+        <Title>Create Product</Title>
+        <Formik
+            validationSchema={productValidationSchema}
+            initialValues={{
+                productNameRu: "",
+                productNameUz: "",
+                descriptionRu: "",
+                descriptionUz: "",
+                price: "",
+                slug: "",
+                category: 0,
+                available_volumes: [
                     {
-                        showCategories && (
-                            <div className={style.input__suggestions}>
-                                {categories.data?.categories.map((item:any) => (
-                                    <div className={style.suggestions__item} onClick={() => handleCategoryChooseClick(item?.id)}>
-                                        <span className={style.item__text}>{item?.name_ru}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        )
+                        volume: 0,
+                        unit: ""
                     }
-                </label>
-                
-                <CustomInput
-                    inputType='file'
-                    inputName='productImage'
-                    placeholder='Upload Product Image'
-                    name="Product Image"
-                    accept='image/*'
-                    handleChange={(event) => {
-                        const file = event.currentTarget.files?.[0] || null;
-                        formik.setFieldValue("productImage", file)
-                    }}
-                    error={formik.errors.productImage as string}
-                    touched={formik.touched.productImage as boolean}
-                />
-            </div>
-            <div className={style.main__row}>
-                <CustomInput
-                    inputType='text'
-                    inputName='slug'
-                    placeholder='Enter product price'
-                    name="Product Slug"
-                    handleChange={formik.handleChange}
-                    value={formik.values.slug}
-                    error={formik.errors.slug as string}
-                    touched={formik.touched.slug as boolean}
-                />
-                <StatusToggle handleToggle={(status: boolean) => formik.setFieldValue("is_active", status)}/>
-            </div>
-            <LoginButton text='Создать Продукт' />
-        </form>
+                ],
+                is_active: false,
+                productImage: null,
+            }}
+            onSubmit={(values, actions) => handleCreateProduct(values, actions, saveImage, newProduct)}
+        >
+        {(formikProps) => (
+            <form className={style.createProducts__main} onSubmit={formikProps.handleSubmit}>
+                <div className={style.main__container}>
+                    <div className={style.container__details}>
+                        <div className={style.main__row}>
+                            <CustomInput
+                                inputType='text'
+                                inputName='productNameRu'
+                                placeholder='Ввведите навзание продукта'
+                                name="Название продукта"
+                                handleChange={formikProps.handleChange}
+                                value={formikProps.values.productNameRu as string}
+                                error={formikProps.errors.productNameRu as string}
+                                touched={formikProps.touched.productNameRu as boolean}
+                            />
+                            <CustomInput
+                                inputType='text'
+                                inputName='productNameUz'
+                                placeholder='Produkt nomini kirgazing'
+                                name="Produkt Nomi"
+                                handleChange={formikProps.handleChange}
+                                value={formikProps.values.productNameUz as string}
+                                error={formikProps.errors.productNameUz as string}
+                                touched={formikProps.touched.productNameUz as boolean}
+                            />
+                        </div>
+                        <div className={style.main__row}>
+                            <DescriptionInput
+                                inputName='descriptionRu'
+                                name='Описание продукта'
+                                placeholder='Введите описание продукта'
+                                handleChange={formikProps.handleChange}
+                                value={formikProps.values.descriptionRu}
+                                touched={formikProps.touched.descriptionRu}
+                                error={formikProps.errors.descriptionRu}
+                            />
+                            <DescriptionInput
+                                inputName='descriptionUz'
+                                name="Produkt ta'rifi"
+                                placeholder="Produkt ta'rifini kirgazing"
+                                handleChange={formikProps.handleChange}
+                                value={formikProps.values.descriptionUz}
+                                touched={formikProps.touched.descriptionUz}
+                                error={formikProps.errors.descriptionUz}
+                            />
+                        </div>
+                        
+                        <div className={style.main__row}>
+                            <CustomInput
+                                inputType='text'
+                                inputName='price'
+                                placeholder='Enter product price'
+                                name="Product Price"
+                                handleChange={formikProps.handleChange}
+                                value={formikProps.values.price}
+                                error={formikProps.errors.price as string}
+                                touched={formikProps.touched.price as boolean}
+                            />
+                            <div className={style.row__select}>
+                                <Select
+                                    placeholder="Select category"
+                                    // options={categories.data?.categories.map((item:any) => ({
+                                    //     value: item?.id,
+                                    //     label: item?.name_ru
+                                    // }))}
+                                    onChange={(value) => formikProps.setFieldValue("category", value)}
+                                    onBlur={() => formikProps.setFieldTouched("category", true)}
+                                    status={formikProps.errors.category && formikProps.touched.category ? "error": undefined}
+                                    value={formikProps.values.category || undefined}
+                                />
+                                {formikProps.errors.category && formikProps.touched.category && (
+                                    <div className={style.error}>
+                                        {formikProps.errors.category}
+                                    </div>
+                                )}
+                            </div>
+                            <div className={style.row__upload}>
+                                <Upload
+                                    name="productImage"
+                                    beforeUpload={(file) => {
+                                        // Preventing automatic upload
+                                        return false;
+                                    }}
+                                    onChange={(info) => {
+                                        const file = info.fileList[0]?.originFileObj || null;
+                                        formikProps.setFieldValue("productImage", file);
+                                    }}
+                                    maxCount={1}
+                                    accept="image/jpg,image/jpeg,image/png"
+                                    showUploadList={{ showPreviewIcon: true, showRemoveIcon: true }}
+                                    >
+                                    {
+                                        formikProps.errors.productImage && formikProps.touched.productImage ? (<Button icon={<UploadOutlined />} danger>Upload Product Image</Button>) : (<Button icon={<UploadOutlined />} >Upload Product Image</Button>)
+                                    }
+                                </Upload>
+                                    {formikProps.errors.productImage && formikProps.touched.productImage && (
+                                    <div className={style.upload__afterfix}>
+                                            {formikProps.errors.productImage}
+                                    </div>)}
+                                </div>
+                            </div>
+                            <div className={style.main__row}>
+                                <CustomInput
+                                    inputType='text'
+                                    inputName='slug'
+                                    placeholder='Enter product price'
+                                    name="Product Slug"
+                                    handleChange={formikProps.handleChange}
+                                    value={formikProps.values.slug}
+                                    error={formikProps.errors.slug as string}
+                                    touched={formikProps.touched.slug as boolean}
+                                />
+                                <StatusToggle value={formikProps.values.is_active} handleToggle={(status: boolean) => {
+                                        formikProps.setFieldValue("is_active", status)
+                                    }
+                                }/>
+                            </div>
+                        </div>
+                        <FieldArray name='available_volumes'>
+                            {({push, remove}) => (
+                                <div className={style.main__availableVolumes}>
+                                    {formikProps.values.available_volumes.map((_, index) => (
+                                        <div key={index} className={style.volumes__wrapper}>
+                                            <CustomInput
+                                                inputType='text'
+                                                inputName={`available_volumes.${index}.volume`}
+                                                placeholder='Enter volume'
+                                                name="Volume"
+                                                handleChange={formikProps.handleChange}
+                                                value={formikProps.values.available_volumes[index].volume}
+                                                error={getIn(formikProps.errors, `available_volumes.${index}.volume`)}
+                                                touched={getIn(formikProps.touched, `available_volumes.${index}.volume`)}
+                                            />
+                                            <CustomInput
+                                                inputType='text'
+                                                inputName={`available_volumes.${index}.unit`}
+                                                placeholder='Enter unit'
+                                                name="Unit"
+                                                handleChange={formikProps.handleChange}
+                                                value={formikProps.values.available_volumes[index].unit}
+                                                error={getIn(formikProps.errors, `available_volumes.${index}.unit`)}
+                                                touched={getIn(formikProps.touched, `available_volumes.${index}.unit`)}
+                                            />
+                                            {index > 0 && (
+                                                  <Button typeof="button" type="default" onClick={() => remove(index)}>Remove</Button>
+                                            )}
+                                        </div>))}
+                                    {formikProps.values.available_volumes.length < 3 && (
+                                        <Button 
+                                            typeof="button"
+                                            type="primary" 
+                                            className={style.availableVolumes__add}
+                                            onClick={() => push({ volume: 0, unit: '' })}
+                                        >
+                                            Add Volume
+                                        </Button>
+                                    )}
+                                </div>
+                            )}
+                        </FieldArray>
+                    </div>
+                <LoginButton text='Создать Продукт' isLoading={newProduct.isLoading}/>
+            </form>)}
+        </Formik>
     </div>);
 }
+
 
 export default CreateProducts;
